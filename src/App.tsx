@@ -5,7 +5,7 @@ function App() {
   const base = import.meta.env.BASE_URL;
   const [isPlaying, setIsPlaying] = useState(true);
   const [timeLeft, setTimeLeft] = useState<number>(0);
-  const [showProposal, setShowProposal] = useState(false);
+  const [showProposal, setShowProposal] = useState(true);
   const [noButtonScale, setNoButtonScale] = useState(1);
   const [noButtonPosition, setNoButtonPosition] = useState({ x: 0, y: 0 });
   const [yesButtonScale, setYesButtonScale] = useState(1);
