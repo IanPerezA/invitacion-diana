@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Heart, Music, MapPin, Calendar, Clock, Play, Pause, Volume2 } from 'lucide-react';
 
 function App() {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const base = import.meta.env.BASE_URL;
+  const [isPlaying, setIsPlaying] = useState(true);
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [showProposal, setShowProposal] = useState(false);
   const [noButtonScale, setNoButtonScale] = useState(1);
@@ -99,12 +100,7 @@ function App() {
   if (showProposal) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-yellow-100 flex items-center justify-center p-4 relative overflow-hidden">
-      <audio
-        controls
-        preload="metadata"
-        src="./bonita.mp3"
-        className="mt-4"
-      />
+<audio controls preload="metadata" src={base + 'bonita.mp3'} />        
 
         {/* Partículas flotantes */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -192,9 +188,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-yellow-100 flex items-center justify-center p-4 relative overflow-hidden">
-      <audio ref={audioRef} loop>
-        <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav" />
-      </audio>
+<audio controls preload="metadata" src={base + 'bonita.mp3'} />
 
       {/* Partículas flotantes */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
