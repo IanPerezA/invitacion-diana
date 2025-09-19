@@ -274,6 +274,16 @@ function App() {
               />
             </div>
           </div>
+                  <div className="flex justify-center">
+          <button
+            onClick={toggleMusic}
+            className="bg-yellow-100 text-yellow-700 px-6 py-3 rounded-full hover:bg-yellow-200 transition-colors duration-300 flex items-center gap-2 font-semibold"
+          >
+            {isPlaying ? <Pause size={20} /> : <Play size={20} />}
+            <Volume2 size={20} />
+            <span>{isPlaying ? 'Pausar música' : 'Reproducir música romántica'}</span>
+          </button>
+        </div>
 
           <div className="flex justify-center items-center gap-8 relative h-32">
             <button
@@ -525,16 +535,7 @@ function App() {
         </div>
 
         {/* Music Control */}
-        <div className="flex justify-center">
-          <button
-            onClick={toggleMusic}
-            className="bg-yellow-100 text-yellow-700 px-6 py-3 rounded-full hover:bg-yellow-200 transition-colors duration-300 flex items-center gap-2 font-semibold"
-          >
-            {isPlaying ? <Pause size={20} /> : <Play size={20} />}
-            <Volume2 size={20} />
-            <span>{isPlaying ? 'Pausar música' : 'Reproducir música romántica'}</span>
-          </button>
-        </div>
+
 
         <div className="mt-6 text-sm text-gray-500">
           💝 Con amor y muchas ganas de compartir esta experiencia contigo 💝
