@@ -1,10 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Heart, Music, MapPin, Calendar, Clock, Play, Pause, Volume2 } from 'lucide-react';
+import { toGoogleCalendarUrl } from "../utils/calendar";
 
 interface CelebrationState {
   showCelebration: boolean;
   flowers: Array<{ id: number; x: number; y: number; delay: number }>;
   fireworks: Array<{ id: number; x: number; y: number; delay: number }>;
+}
+
+// Move BotonSi function outside of App component
+function createCalendarUrl() {
+  const startLocal = new Date("2025-10-12T19:00:00"); // hora local CDMX
+  const endLocal   = new Date("2025-10-12T23:00:00");
+
+  return toGoogleCalendarUrl({
+    title: "Invitación: Diana E Ian",
+    start: startLocal,
+    end: endLocal,
+    description:
+      "¡Te espero! Código de vestimenta: formal. Confirma tu asistencia por mensaje.",
+    location: "Salón Jardín X, CDMX",
+    timezone: "America/Mexico_City",
+  });
 }
 
 function App() {
@@ -140,6 +157,8 @@ function App() {
 
   const handleYesClick = () => {
     createCelebrationAnimation();
+    // Open calendar URL in new tab
+    window.open(createCalendarUrl(), '_blank');
   };
 
   const handleProposalYesClick = () => {
@@ -238,7 +257,7 @@ function App() {
             </div>
             <p className="text-xl text-gray-600 mb-8">
               Diana Laura, después de esta hermosa velada musical,
-              me encantaría poder compartir mi vida contigo... 💖
+              me encantaría poder cuidarte amarte y respetarte... 💖
             </p>
             
             {/* Polaroid Images */}
