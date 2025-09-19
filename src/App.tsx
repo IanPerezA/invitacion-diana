@@ -1,11 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Heart, Music, MapPin, Calendar, Clock, Play, Pause, Volume2 } from 'lucide-react';
 
+interface CelebrationState {
+  showCelebration: boolean;
+  flowers: Array<{ id: number; x: number; y: number; delay: number }>;
+  fireworks: Array<{ id: number; x: number; y: number; delay: number }>;
+}
+
 function App() {
   const base = import.meta.env.BASE_URL;
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [timeLeft, setTimeLeft] = useState<number>(0);
-  const [showProposal, setShowProposal] = useState(true);
+  const [showProposal, setShowProposal] = useState(false);
   const [noButtonScale, setNoButtonScale] = useState(1);
   const [noButtonPosition, setNoButtonPosition] = useState({ x: 0, y: 0 });
   const [yesButtonScale, setYesButtonScale] = useState(1);
@@ -14,10 +20,34 @@ function App() {
   const [proposalNoPosition, setProposalNoPosition] = useState({ x: 0, y: 0 });
   const [proposalYesScale, setProposalYesScale] = useState(1);
   const [proposalNoClickCount, setProposalNoClickCount] = useState(0);
+  const [celebration, setCelebration] = useState<CelebrationState>({
+    showCelebration: false,
+    flowers: [],
+    fireworks: []
+  });
   const audioRef = useRef<HTMLAudioElement>(null);
 
   // Fecha del concierto: 24 de Octubre 2025, 19:30 + 2 horas = 21:30
   const concertEnd = new Date('2025-10-24T21:30:00').getTime();
+
+  // Auto-play music on component mount
+  useEffect(() => {
+    const playAudio = async () => {
+      if (audioRef.current) {
+        try {
+          audioRef.current.volume = 0.3;
+          await audioRef.current.play();
+          setIsPlaying(true);
+        } catch (error) {
+          console.log('Auto-play blocked, user interaction required');
+          setIsPlaying(false);
+        }
+      }
+    };
+
+    // Small delay to ensure audio element is ready
+    setTimeout(playAudio, 500);
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -57,17 +87,40 @@ function App() {
     }
   };
 
+  const createCelebrationAnimation = () => {
+    const flowers = Array.from({ length: 30 }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: -10,
+      delay: Math.random() * 2000
+    }));
+
+    const fireworks = Array.from({ length: 8 }, (_, i) => ({
+      id: i,
+      x: Math.random() * 80 + 10,
+      y: Math.random() * 50 + 10,
+      delay: Math.random() * 1000
+    }));
+
+    setCelebration({
+      showCelebration: true,
+      flowers,
+      fireworks
+    });
+
+    // Hide celebration after 5 seconds
+    setTimeout(() => {
+      setCelebration(prev => ({ ...prev, showCelebration: false }));
+    }, 5000);
+  };
+
   const handleNoClick = (e: React.MouseEvent) => {
     e.preventDefault();
     setNoClickCount(prev => prev + 1);
     
-    // Hacer el botón más pequeño
     setNoButtonScale(prev => Math.max(0.3, prev - 0.15));
-    
-    // Hacer el botón Sí más grande
     setYesButtonScale(prev => Math.min(1.5, prev + 0.1));
     
-    // Mover el botón No a una posición aleatoria
     const newX = Math.random() * 200 - 100;
     const newY = Math.random() * 100 - 50;
     setNoButtonPosition({ x: newX, y: newY });
@@ -77,30 +130,82 @@ function App() {
     e.preventDefault();
     setProposalNoClickCount(prev => prev + 1);
     
-    // Hacer el botón más pequeño
     setProposalNoScale(prev => Math.max(0.2, prev - 0.2));
-    
-    // Hacer el botón Sí más grande
     setProposalYesScale(prev => Math.min(2, prev + 0.15));
     
-    // Mover el botón No a una posición aleatoria
     const newX = Math.random() * 300 - 150;
     const newY = Math.random() * 150 - 75;
     setProposalNoPosition({ x: newX, y: newY });
   };
 
   const handleYesClick = () => {
-    alert('¡Qué maravilloso! 🥰 ¡Nos vemos en el concierto! 💕');
+    createCelebrationAnimation();
   };
 
   const handleProposalYesClick = () => {
-    alert('¡Sí acepto ser tu novia! 💕🥰✨ ¡Eres increíble!');
+    createCelebrationAnimation();
   };
+
+  const PolaroidImage = ({ src, alt, caption }: { src: string; alt: string; caption: string }) => (
+    <div className="bg-white p-4 shadow-lg transform rotate-2 hover:rotate-0 transition-transform duration-300 max-w-48">
+      <img src={src} alt={alt} className="w-full h-32 object-cover mb-2" />
+      <p className="text-sm text-gray-700 text-center font-handwriting">{caption}</p>
+    </div>
+  );
 
   if (showProposal) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-yellow-100 flex items-center justify-center p-4 relative overflow-hidden">
-<audio controls preload="metadata" src={base + 'bonita.mp3'} />        
+        <audio 
+          ref={audioRef}
+          preload="metadata" 
+          src={base + 'bonita.mp3'} 
+          loop
+          className="hidden"
+        />
+
+        {/* Celebration Animation */}
+        {celebration.showCelebration && (
+          <div className="fixed inset-0 pointer-events-none z-50">
+            {/* Pink Flowers */}
+            {celebration.flowers.map(flower => (
+              <div
+                key={flower.id}
+                className="absolute text-pink-400 animate-bounce opacity-80"
+                style={{
+                  left: `${flower.x}%`,
+                  top: `${flower.y}%`,
+                  animationDelay: `${flower.delay}ms`,
+                  animationDuration: '3s',
+                  fontSize: `${Math.random() * 20 + 20}px`
+                }}
+              >
+                🌸
+              </div>
+            ))}
+            
+            {/* Fireworks */}
+            {celebration.fireworks.map(firework => (
+              <div
+                key={firework.id}
+                className="absolute animate-ping"
+                style={{
+                  left: `${firework.x}%`,
+                  top: `${firework.y}%`,
+                  animationDelay: `${firework.delay}ms`,
+                  animationDuration: '1s'
+                }}
+              >
+                <div className="text-4xl">✨</div>
+              </div>
+            ))}
+
+            {/* Heart explosion */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="animate-pulse text-6xl">💕</div>
+            </div>
+          </div>
+        )}
 
         {/* Partículas flotantes */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -135,6 +240,20 @@ function App() {
               Diana Laura, después de esta hermosa velada musical,
               me encantaría poder compartir mi vida contigo... 💖
             </p>
+            
+            {/* Polaroid Images */}
+            <div className="flex justify-center gap-4 mb-8 flex-wrap">
+              <PolaroidImage 
+                src={base + 'photo1.jpg'} 
+                alt="Momento especial" 
+                caption="Nuestros momentos ✨"
+              />
+              <PolaroidImage 
+                src={base + 'photo2.jpg'} 
+                alt="Recuerdo hermoso" 
+                caption="Contigo siempre 💕"
+              />
+            </div>
           </div>
 
           <div className="flex justify-center items-center gap-8 relative h-32">
@@ -188,7 +307,56 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-yellow-100 flex items-center justify-center p-4 relative overflow-hidden">
-<audio controls preload="metadata" src={base + 'bonita.mp3'} />
+      <audio 
+        ref={audioRef}
+        preload="metadata" 
+        src={base + 'bonita.mp3'} 
+        loop
+        className="hidden"
+      />
+
+      {/* Celebration Animation */}
+      {celebration.showCelebration && (
+        <div className="fixed inset-0 pointer-events-none z-50">
+          {/* Pink Flowers */}
+          {celebration.flowers.map(flower => (
+            <div
+              key={flower.id}
+              className="absolute text-pink-400 animate-bounce opacity-80"
+              style={{
+                left: `${flower.x}%`,
+                top: `${flower.y}%`,
+                animationDelay: `${flower.delay}ms`,
+                animationDuration: '3s',
+                fontSize: `${Math.random() * 20 + 20}px`
+              }}
+            >
+              🌸
+            </div>
+          ))}
+          
+          {/* Fireworks */}
+          {celebration.fireworks.map(firework => (
+            <div
+              key={firework.id}
+              className="absolute animate-ping"
+              style={{
+                left: `${firework.x}%`,
+                top: `${firework.y}%`,
+                animationDelay: `${firework.delay}ms`,
+                animationDuration: '1s'
+              }}
+            >
+              <div className="text-4xl">✨</div>
+            </div>
+          ))}
+
+          {/* Heart explosion */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="animate-pulse text-6xl">💕</div>
+          </div>
+        </div>
+      )}
 
       {/* Partículas flotantes */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -220,6 +388,25 @@ function App() {
           <p className="text-2xl text-gray-700 font-semibold">
             Para: <span className="text-yellow-600">Diana Laura Contreras</span>
           </p>
+        </div>
+
+        {/* Polaroid Images Gallery */}
+        <div className="flex justify-center gap-6 mb-8 flex-wrap">
+          <PolaroidImage 
+            src={base + 'amor1.jpg'} 
+            alt="Momento especial 1" 
+            caption="Que bonitos ojos tienes 🎵"
+          />
+          <PolaroidImage 
+            src={base + 'amor2.jpg'} 
+            alt="Momento especial 2" 
+            caption="Que bonita noche hoy 💕"
+          />
+          <PolaroidImage 
+            src={base + 'flores1.jpg'} 
+            alt="Momento especial 3" 
+            caption="Que bonita tu, que bonita tu,ereees ✨"
+          />
         </div>
 
         {/* Event Details */}
