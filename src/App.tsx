@@ -10,8 +10,8 @@ interface CelebrationState {
 
 // Move BotonSi function outside of App component
 function createCalendarUrl() {
-  const startLocal = new Date("2025-10-12T19:00:00"); // hora local CDMX
-  const endLocal   = new Date("2025-10-12T23:00:00");
+  const startLocal = new Date("2025-10-24T19:30:00"); // hora local CDMX
+  const endLocal   = new Date("2025-10-24T21:30:00");
 
   return toGoogleCalendarUrl({
     title: "Invitación: Diana E Ian",
@@ -19,7 +19,7 @@ function createCalendarUrl() {
     end: endLocal,
     description:
       "¡Te espero! Código de vestimenta: formal. Confirma tu asistencia por mensaje.",
-    location: "Salón Jardín X, CDMX",
+    location: "Av. de la Paz 57, 1er piso, San Ángel, Álvaro Obregón, 01000, CDMX",
     timezone: "America/Mexico_City",
   });
 }
@@ -175,13 +175,18 @@ function App() {
   if (showProposal) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-yellow-100 flex items-center justify-center p-4 relative overflow-hidden">
-        <audio 
-          ref={audioRef}
-          preload="metadata" 
-          src={base + 'bonita.mp3'} 
-          loop
-          className="hidden"
-        />
+          <div className="flex justify-center mb-8">
+  <audio
+    ref={audioRef}
+    controls
+    preload="metadata"
+    playsInline
+    src={base + 'bonita.mp3'}
+    className="w-full max-w-md"
+    onPlay={() => setIsPlaying(true)}
+    onPause={() => setIsPlaying(false)}
+  />
+</div>
 
         {/* Celebration Animation */}
         {celebration.showCelebration && (
@@ -263,30 +268,18 @@ function App() {
             {/* Polaroid Images */}
             <div className="flex justify-center gap-4 mb-8 flex-wrap">
               <PolaroidImage 
-                src={base + 'photo1.jpg'} 
+                src={base + 'flores2.jpg'} 
                 alt="Momento especial" 
                 caption="Nuestros momentos ✨"
               />
               <PolaroidImage 
-                src={base + 'photo2.jpg'} 
+                src={base + 'rosas.jpg'} 
                 alt="Recuerdo hermoso" 
                 caption="Contigo siempre 💕"
               />
             </div>
           </div>
 
-          <div className="flex justify-center mb-8">
-  <audio
-    ref={audioRef}
-    controls
-    preload="metadata"
-    playsInline
-    src={base + 'bonita.mp3'}
-    className="w-full max-w-md"
-    onPlay={() => setIsPlaying(true)}
-    onPause={() => setIsPlaying(false)}
-  />
-</div>
 
           <div className="flex justify-center items-center gap-8 relative h-32">
             <button
@@ -339,13 +332,6 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-yellow-100 flex items-center justify-center p-4 relative overflow-hidden">
-      <audio 
-        ref={audioRef}
-        preload="metadata" 
-        src={base + 'bonita.mp3'} 
-        loop
-        className="hidden"
-      />
 
       {/* Celebration Animation */}
       {celebration.showCelebration && (
@@ -422,6 +408,20 @@ function App() {
           </p>
         </div>
 
+        {/*NUEVO BOTON DE REPRODUCCION*/ }
+                {/* Music Control */}
+        <div className="flex justify-center">
+          <button
+            onClick={toggleMusic}
+            className="bg-yellow-100 text-yellow-700 px-6 py-3 rounded-full hover:bg-yellow-200 transition-colors duration-300 flex items-center gap-2 font-semibold"
+          >
+            {isPlaying ? <Pause size={20} /> : <Play size={20} />}
+            <Volume2 size={20} />
+            <span>{isPlaying ? 'Pausar música' : 'Reproducir música romántica'}</span>
+          </button>
+        </div>
+        <br></br>
+        <br></br>
         {/* Polaroid Images Gallery */}
         <div className="flex justify-center gap-6 mb-8 flex-wrap">
           <PolaroidImage 
@@ -537,17 +537,7 @@ function App() {
           )}
         </div>
 
-        {/* Music Control */}
-        <div className="flex justify-center">
-          <button
-            onClick={toggleMusic}
-            className="bg-yellow-100 text-yellow-700 px-6 py-3 rounded-full hover:bg-yellow-200 transition-colors duration-300 flex items-center gap-2 font-semibold"
-          >
-            {isPlaying ? <Pause size={20} /> : <Play size={20} />}
-            <Volume2 size={20} />
-            <span>{isPlaying ? 'Pausar música' : 'Reproducir música romántica'}</span>
-          </button>
-        </div>
+
 
         <div className="mt-6 text-sm text-gray-500">
           💝 Con amor y muchas ganas de compartir esta experiencia contigo 💝
