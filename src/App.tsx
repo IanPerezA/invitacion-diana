@@ -26,7 +26,7 @@ function createCalendarUrl() {
 
 function App() {
   const base = import.meta.env.BASE_URL;
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [showProposal, setShowProposal] = useState(false);
   const [noButtonScale, setNoButtonScale] = useState(1);
