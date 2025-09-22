@@ -26,7 +26,7 @@ function createCalendarUrl() {
 
 function App() {
   const base = import.meta.env.BASE_URL;
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [showProposal, setShowProposal] = useState(false);
   const [noButtonScale, setNoButtonScale] = useState(1);
@@ -175,18 +175,18 @@ function App() {
   if (showProposal) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-yellow-100 flex items-center justify-center p-4 relative overflow-hidden">
-          <div className="flex justify-center mb-8">
-  <audio
-    ref={audioRef}
-    controls
-    preload="metadata"
-    playsInline
-    src={base + 'bonita.mp3'}
-    className="w-full max-w-md"
-    onPlay={() => setIsPlaying(true)}
-    onPause={() => setIsPlaying(false)}
-  />
-</div>
+        <div className="flex justify-center mb-8">
+          <audio
+            ref={audioRef}
+            controls
+            preload="metadata"
+            playsInline
+            src={base + 'bonita.mp3'}
+            className="w-full max-w-md"
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
+          />
+        </div>
 
         {/* Celebration Animation */}
         {celebration.showCelebration && (
@@ -237,7 +237,7 @@ function App() {
             <Heart
               key={i}
               className={`absolute text-yellow-300 animate-bounce opacity-30`}
-              size={Math.random() * 20 + 10}
+              size={Math.random() * 20 + 20}
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
@@ -279,7 +279,6 @@ function App() {
               />
             </div>
           </div>
-
 
           <div className="flex justify-center items-center gap-8 relative h-32">
             <button
@@ -408,8 +407,7 @@ function App() {
           </p>
         </div>
 
-        {/*NUEVO BOTON DE REPRODUCCION*/ }
-                {/* Music Control */}
+        {/* NUEVO BOTÓN DE REPRODUCCIÓN */}
         <div className="flex justify-center">
           <button
             onClick={toggleMusic}
@@ -420,8 +418,10 @@ function App() {
             <span>{isPlaying ? 'Pausar música' : 'Reproducir música romántica'}</span>
           </button>
         </div>
-        <br></br>
-        <br></br>
+
+        <br />
+        <br />
+
         {/* Polaroid Images Gallery */}
         <div className="flex justify-center gap-6 mb-8 flex-wrap">
           <PolaroidImage 
@@ -438,6 +438,20 @@ function App() {
             src={base + 'flores1.jpg'} 
             alt="Momento especial 3" 
             caption="Que bonita tu, que bonita tu,ereees ✨"
+          />
+        </div>
+
+        {/* Reproductor debajo de las polaroid */}
+        <div className="flex justify-center mb-8">
+          <audio
+            ref={audioRef}
+            controls
+            preload="metadata"
+            playsInline
+            src={base + 'bonita.mp3'}
+            className="hidden"
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
           />
         </div>
 
@@ -536,8 +550,6 @@ function App() {
             </div>
           )}
         </div>
-
-
 
         <div className="mt-6 text-sm text-gray-500">
           💝 Con amor y muchas ganas de compartir esta experiencia contigo 💝
